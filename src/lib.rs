@@ -28,5 +28,53 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 
     println!("File contents: {:?}", contents);
 
+    let result = search(&config.query, &contents);
+
+    println!("{:#?}", result);
+
     Ok(())
+}
+
+fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    let mut results = Vec::new();
+
+    for line in contents.lines() {
+        if line.contains(query) {
+            results.push(line);
+        }
+    }
+
+    results
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn one_result() {
+        let query = "duct";
+        let result = vec!["safe, productive, fast."];
+
+        assert_eq!(
+            result,
+            search(query, get_contents())
+        );
+    }
+
+    fn no_result() {
+        let badQuery = "non";
+        let emptyResult: Vec<&str> = Vec::new();
+
+        assert_eq!(
+            emptyResult,
+            search(badQuery, get_contents())
+        );
+    }
+
+    fn get_contents<'a>() -> &'a str {
+"Rust:
+safe, productive, fast.
+Pick three."
+    }
 }
