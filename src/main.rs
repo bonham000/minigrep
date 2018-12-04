@@ -10,12 +10,12 @@ fn main() {
 
     let args: Vec<String> = env::args().collect();
     let config = Config::new(&args).unwrap_or_else(|err| {
-        println!("A problem occurred validating the arguments: {}", err);
+        eprintln!("A problem occurred validating the arguments: {}", err);
         process::exit(1);
     });
 
     if let Err(e) = minigrep::run(config) {
-        println!("The program failed: {}", e);
+        eprintln!("The program failed: {}", e);
         process::exit(1);
     }
 }
